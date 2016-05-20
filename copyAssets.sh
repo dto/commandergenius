@@ -1,8 +1,17 @@
 #!/bin/sh
 
-echo "Copying app data files from project/jni/application/src/AndroidData to project/assets"
+
+
+
+# dto hacks begin here
+echo "Note: Copying ECL libs and assets"
+cp -R ~/src/ecl-android/libs/armeabi/libecl*.so project/libs/armeabi
+cp -R ~/src/ecl-android/assets/* project/assets/lisp project/assets/
+
+echo "Note: Copying app data files from project/jni/application/src/AndroidData to project/assets"
 mkdir -p project/assets
 rm -f project/assets/*
+
 if [ -d "project/jni/application/src/AndroidData" ] ; then
 	cp -L project/jni/application/src/AndroidData/* project/assets/
 	exit 0
@@ -13,4 +22,8 @@ if [ -d "project/jni/application/src/AndroidData" ] ; then
 		fi
 	done
 fi
+
+
+
+
 exit 0
