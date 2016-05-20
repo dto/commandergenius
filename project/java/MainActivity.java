@@ -21,6 +21,26 @@ freely, subject to the following restrictions:
 
 package net.sourceforge.clonekeenplus;
 
+// from EclReplActivity.java
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.View;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.FileReader;
+import java.io.IOException;
+// end of EclReplActivity.java section
+
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
@@ -96,12 +116,73 @@ import android.app.UiModeManager;
 
 public class MainActivity extends Activity
 {
-	@Override
+    // from EclReplActivity.java
+    static String outputBuffer;
+    static SpannableString resultBuffer;
+    private Handler mHandler;
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String result = intent.getStringExtra("data");
+                if (intent.getAction() == EmbeddedCommonLisp.BROADCAST_STATUS) {
+                    Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+                } else {
+                    resultBuffer = new SpannableString(result);
+                    resultBuffer.setSpan(new ForegroundColorSpan
+                                         (Color.RED), 0, result.length(), 0);
+                    updateOutput();
+                }
+            }
+        };
+
+    private Runnable mSlurpOutput = new Runnable() {
+            private int limit = 128;
+            private int lines = 0;
+            private void appendOutput(char [] array) {
+                String chunk = new String(array);
+                lines += chunk.split(System.getProperty("line.separator")).length-1;
+                outputBuffer = outputBuffer + chunk;
+                if (limit < lines) {
+                    for(int i=0; i<lines-limit; i++)
+                        outputBuffer = outputBuffer.substring
+                            (outputBuffer.indexOf
+                             (System.getProperty("line.separator"))+1);
+                    lines = limit;
+                }
+            }
+
+            public void run() {
+                mHandler.postDelayed(this, 50);
+                FileReader in = EclApplication.outputSource;
+                char [] array = new char[128];
+                int len;
+                try {
+                    if (in.ready()) {
+                        len = in.read(array, 0, 128);
+                        appendOutput(array);
+                        updateOutput();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    // end EclReplActivity.java section
+        
+    @Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
 		instance = this;
+
+		// from EclReplActivity.java
+		Intent intent = new Intent(this, EmbeddedCommonLisp.class);
+		intent.setAction("ENSURE_LISP");
+		startService(intent);
+		// end of EclReplActivity.java section
+		
 		// fullscreen mode
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -231,8 +312,8 @@ public class MainActivity extends Activity
 		if( Globals.CreateService )
 		{
 			Log.v("SDL", "Starting dummy service - displaying notification");
-			Intent intent = new Intent(this, DummyService.class);
-			startService(intent);
+			Intent serviceIntent = new Intent(this, DummyService.class);
+			startService(serviceIntent);
 		}
 		cloudSave = new CloudSave(this);
 	}
@@ -485,14 +566,53 @@ public class MainActivity extends Activity
 	@Override
 	protected void onStart() {
 		super.onStart();
+
+		// from EclReplActivity.java
+		registerReceiver
+		    (mMessageReceiver, new IntentFilter
+		     (EmbeddedCommonLisp.BROADCAST_STATUS));
+		registerReceiver
+		    (mMessageReceiver, new IntentFilter
+		     (EmbeddedCommonLisp.BROADCAST_RESULT));
+		// end of EclReplActivity.java section
+		
 		cloudSave.onStart();
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStart();
+		
+		// from EclReplActivity.java
+		unregisterReceiver(mMessageReceiver);
+		// end of EclReplActivity.java section
+
 		cloudSave.onStop();
 	}
+
+    public void updateOutput() { return; }
+    //     TextView textView =
+    //         (TextView) findViewById(R.id.ecl_output);
+    //     ScrollView scrollView =
+    //         (ScrollView) findViewById(R.id.output_viewport);
+
+    //     if(outputBuffer != null)
+    //         textView.setText(outputBuffer);
+
+    //     if (resultBuffer != null) {
+    //         textView.append("\n");
+    //         textView.append(resultBuffer);
+    //     }
+
+    //     scrollView.post(new Runnable() {
+    //             @Override
+    //             public void run() {
+    //                 ScrollView scrollView = (ScrollView)
+    //                     findViewById(R.id.output_viewport);
+    //                 scrollView.fullScroll(View.FOCUS_DOWN);
+    //             }
+    //         });
+    // }
 
 	@Override
 	public void onActivityResult(int request, int response, Intent data) {
