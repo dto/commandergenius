@@ -85,7 +85,8 @@ export `grep "AppFullName=" AndroidAppSettings.cfg`
 if ( grep "package $AppFullName;" project/src/Globals.java > /dev/null 2>&1 && \
 		[ "`readlink AndroidAppSettings.cfg`" -ot "project/src/Globals.java" ] && \
 		[ -z "`find project/java/* project/AndroidManifestTemplate.xml -cnewer project/src/Globals.java`" ] ) ; then true ; else
-	./changeAppSettings.sh -a || exit 1
+#	./changeAppSettings.sh -a || exit 1
+	/bin/true || exit 1
 	sleep 1
 	touch project/src/Globals.java
 fi
@@ -187,7 +188,7 @@ cd project && env PATH=$NDKBUILDPATH BUILD_NUM_CPUS=$NCPU nice -n19 ndk-build -j
 			zipalign 4 bin/MainActivity-release-unsigned.apk bin/MainActivity-debug.apk || exit 1 ; \
 		else \
 			$quick_rebuild && { \
-				ln -s -f libs lib ; \
+			    ln -s -f libs lib ; \
 				zip -u -r bin/MainActivity-debug-unaligned.apk lib assets || exit 1 ; \
 				jarsigner -tsa http://timestamp.digicert.com -verbose -keystore ~/.android/debug.keystore -storepass android -sigalg MD5withRSA -digestalg SHA1 bin/MainActivity-debug-unaligned.apk androiddebugkey || exit 1 ; \
 				rm -f bin/MainActivity-debug.apk ; \
