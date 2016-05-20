@@ -91,13 +91,13 @@
  */
 #ifndef SDLCALL
 # if defined(__WIN32__) && !defined(__GNUC__)
-#  define SDLCALL __cdecl
+#  define SDLCALL 
 # elif defined(__OS2__)
 #  if defined (__GNUC__) && __GNUC__ < 4
 #   /* Added support for GCC-EMX <v4.x */
 #   /* this is needed for XFree86/OS2 developement */
 #   /* F. Ambacher(anakor@snafu.de) 05.2008 */
-#   define SDLCALL _cdecl
+#   define SDLCALL
 #  else
 #   /* On other compilers on OS/2, we use the _System calling convention */
 #   /* to be compatible with every compiler */
@@ -189,3 +189,4 @@
 #endif
 #endif /* NULL */
 #endif /* ! Mac OS X - breaks precompiled headers */
+ 
