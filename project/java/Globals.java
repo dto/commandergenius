@@ -30,7 +30,7 @@ class Globals
 {
 	// These config options are modified by ChangeAppsettings.sh script - see the detailed descriptions there
 	public static String ApplicationName = "CommanderGenius";
-	public static String AppLibraries[] = { "sdl-1.2", };
+	public static String AppLibraries[] = { "sdl_native_helpers", "sdl-1.2", "sdl_image", "sdl_mixer", "sdl_ttf", "lispbuilder-sdl-ttf-glue", "sdl_gfx", "mikmod" };
 	public static String AppMainLibraries[] = { "application", "sdl_main" };
 	public static final boolean Using_SDL_1_3 = false;
 	public static final boolean Using_SDL_2_0 = false;
