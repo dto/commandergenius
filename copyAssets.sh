@@ -1,13 +1,5 @@
 #!/bin/sh
 
-
-
-
-# dto hacks begin here
-echo "Note: Copying ECL libs and assets"
-cp -R ~/src/ecl-android/libs/armeabi/libecl*.so project/libs/armeabi
-cp -R ~/src/ecl-android/assets/* project/assets/lisp project/assets/
-
 echo "Note: Copying app data files from project/jni/application/src/AndroidData to project/assets"
 mkdir -p project/assets
 rm -f project/assets/*
