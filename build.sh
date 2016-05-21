@@ -175,6 +175,7 @@ strip_libs() {
 	return 0
 }
 
+
 cd project && env PATH=$NDKBUILDPATH BUILD_NUM_CPUS=$NCPU nice -n19 ndk-build -j$NCPU V=1 && \
 	strip_libs && \
 	cd .. && ./copyAssets.sh && cd project && \
