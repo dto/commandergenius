@@ -5,7 +5,7 @@ mkdir -p project/assets
 rm -f project/assets/*
 
 if [ -d "project/jni/application/src/AndroidData" ] ; then
-	cp -L project/jni/application/src/AndroidData/* project/assets/
+	cp -LR project/jni/application/src/AndroidData/* project/assets/
 	exit 0
 	for F in project/assets/*; do
 		if [ `cat $F | wc -c` -gt 1000000 ] ; then
