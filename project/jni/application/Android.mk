@@ -52,7 +52,7 @@ APP_STL := gnustl_static
 
 LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog -lz # -lgnustl_static
 
-LOCAL_LDFLAGS := -Lobj/local/$(TARGET_ARCH_ABI)
+LOCAL_LDFLAGS := -L/home/dto/ecl-android/ -Lobj/local/$(TARGET_ARCH_ABI) 
 
 LOCAL_LDFLAGS += $(APPLICATION_ADDITIONAL_LDFLAGS)
 
