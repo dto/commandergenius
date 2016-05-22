@@ -44,7 +44,7 @@ ifneq ($(APPLICATION_CUSTOM_BUILD_SCRIPT),)
 LOCAL_SRC_FILES := dummy.c
 endif
 
-LOCAL_SHARED_LIBRARIES := sdl-$(SDL_VERSION) $(filter-out $(APP_AVAILABLE_STATIC_LIBS), $(COMPILED_LIBRARIES))
+LOCAL_SHARED_LIBRARIES := ecl ecl_android sdl-$(SDL_VERSION) $(filter-out $(APP_AVAILABLE_STATIC_LIBS), $(COMPILED_LIBRARIES))
 
 LOCAL_STATIC_LIBRARIES := $(filter $(APP_AVAILABLE_STATIC_LIBS), $(COMPILED_LIBRARIES))
 
@@ -52,7 +52,7 @@ APP_STL := gnustl_static
 
 LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog -lz # -lgnustl_static
 
-LOCAL_LDFLAGS := -L/home/dto/ecl-android/ -Lobj/local/$(TARGET_ARCH_ABI) 
+LOCAL_LDFLAGS := /home/dto/src/ecl-android/libecl.so /home/dto/src/ecl-android/libecl_android.so -Lobj/local/$(TARGET_ARCH_ABI) 
 
 LOCAL_LDFLAGS += $(APPLICATION_ADDITIONAL_LDFLAGS)
 
