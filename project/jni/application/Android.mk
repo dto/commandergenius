@@ -1,7 +1,7 @@
-LOCAL_PATH := $(call my-dir)
-
 include $(CLEAR_VARS)
 
+LOCAL_PATH := $(call my-dir)
+include $(CLEAR_VARS)
 LOCAL_MODULE := application
 APPDIR := $(shell readlink $(LOCAL_PATH)/src)
 
@@ -19,6 +19,7 @@ APP_SUBDIRS := $(filter-out %.c %.cpp, $(APP_SUBDIRS))
 LOCAL_SRC_FILES += $(foreach F, $(APP_SUBDIRS), $(addprefix $(F)/,$(notdir $(wildcard $(LOCAL_PATH)/$(F)/*.cpp))))
 LOCAL_SRC_FILES += $(foreach F, $(APP_SUBDIRS), $(addprefix $(F)/,$(notdir $(wildcard $(LOCAL_PATH)/$(F)/*.c))))
 LOCAL_SRC_FILES := $(filter-out $(addprefix $(APPDIR)/, $(APPLICATION_BUILD_EXCLUDE)), $(LOCAL_SRC_FILES))
+# LOCAL_SRC_FILES += org_lisp_ecl_EmbeddedCommonLisp.c ecl_boot.c
 
 # Disabled because they give slight overhead, add "-frtti -fexceptions" to the AppCflags inside AndroidAppSettings.cfg if you need them
 # If you use setEnvironment.sh you may write "env CXXFLAGS='-frtti -fexceptions' ../setEnvironment.sh ./configure".
@@ -44,7 +45,7 @@ ifneq ($(APPLICATION_CUSTOM_BUILD_SCRIPT),)
 LOCAL_SRC_FILES := dummy.c
 endif
 
-LOCAL_SHARED_LIBRARIES := sdl-$(SDL_VERSION) $(filter-out $(APP_AVAILABLE_STATIC_LIBS), $(COMPILED_LIBRARIES))
+LOCAL_SHARED_LIBRARIES := ecl sdl-$(SDL_VERSION) $(filter-out $(APP_AVAILABLE_STATIC_LIBS), $(COMPILED_LIBRARIES))
 
 LOCAL_STATIC_LIBRARIES := $(filter $(APP_AVAILABLE_STATIC_LIBS), $(COMPILED_LIBRARIES))
 # ecl ecl-android
