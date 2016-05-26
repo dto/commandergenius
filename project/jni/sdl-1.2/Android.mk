@@ -57,9 +57,9 @@ LOCAL_SRC_FILES := $(foreach F, $(SDL_SRCS), $(addprefix $(dir $(F)),$(notdir $(
 
 LOCAL_SHARED_LIBRARIES := sdl_native_helpers ecl ecl_android
 
-ifdef USE_GLSHIM 
-LOCAL_STATIC_LIBRARIES := glshim
-endif
+# ifdef USE_GLSHIM 
+# LOCAL_STATIC_LIBRARIES := glshim
+# endif
 
 LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog
 
